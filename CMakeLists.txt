@@ -21,6 +21,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -46,5 +48,6 @@ file(GLOB UI "*/*.ui" "./*.ui")
 qt5_wrap_ui(UI_HEADERS ${UI})
 add_executable(rov_ui_ctrl ${SOURCE_FILES} ${UI_HEADERS})
 
-target_link_libraries(rov_ui_ctrl PRIVATE Qt5::Widgets ${catkin_LIBRARIES})
+string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+target_link_libraries(rov_ui_ctrl PRIVATE Qt5::Widgets ${catkin_LIBRARIES} ${SDL2_LIBRARIES})
 
