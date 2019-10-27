@@ -2,6 +2,7 @@
 #define JOYSTICK_HANDLER_H
 
 #include "joystick.h"
+#include "ros/ros.h"
 
 class Joystick_handler : public QObject
 {
