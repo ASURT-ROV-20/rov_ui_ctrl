@@ -1,4 +1,5 @@
 #include "joystick.h"
+#include <QThread>
 
 Joystick::Joystick(QObject *parent) : QObject(parent)
 {
