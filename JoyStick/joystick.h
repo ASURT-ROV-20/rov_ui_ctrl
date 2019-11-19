@@ -2,35 +2,46 @@
 #define JOYSTICK_H
 
 #include <QObject>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_joystick.h"
-#include "QDebug"
-#include "QThread"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_joystick.h>
+#include <QDebug>
+#include <QThread>
 #include <QTimer>
+#include <QMutex>
+
+#define JOYSTICK_DEAD_ZONE 1000
 
 class Joystick : public QObject
 {
     Q_OBJECT
 
-private:
-    SDL_Joystick *myJoystick;
-    int prevx, prevy, prevz, x, y, z, btn_value, btns;
-    bool btn_pressed;
 public:
-    explicit Joystick(QObject *parent = nullptr);
+    static Joystick* getInstance();
+    virtual ~Joystick();
+    bool isConnected();
+    void close();
 
-    bool pressed();
+signals:
+    void buttonPressed(int btnNo);
+    void buttonUp(int btnNo);
+    void axisChanged(float x, float y, float z);
+    void connected();
+    void disconnected();
 
-    int getX();
+private slots:
+    void run();
 
-    int getY();
+private:
+    Joystick();
+    bool init();
 
-    int getZ();
+    SDL_Joystick* m_controller;
 
-    int getBtn_value();
-
-    void joystick_update();
-
+    bool m_isConnected;
+    bool m_isRunning;
+    static Joystick* m_instance;
+    QThread *m_thread;
+    static QMutex m_instance_lock;
 };
 
 #endif // JOYSTICK_H

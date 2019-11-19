@@ -1,9 +1,9 @@
 #include "include/connectiondialog.h"
+#include "include/mainwindow.h"
 #include "ui_connectiondialog.h"
 #include <QDebug>
 #include <QHostAddress>
 #include <QNetworkInterface>
-#include "include/rosservice.h"
 
 ConnectionDialog::ConnectionDialog(int argc, char** argv, QWidget *parent) :
     QDialog(parent),
@@ -78,9 +78,9 @@ void ConnectionDialog::on_btnCancel_clicked()
 }
 
 void ConnectionDialog::onRosConnected() {
-    ui->btnConnect->setText("Connected");
-    ui->lblError->setVisible(false);
-    ui->btnConnect->setEnabled(true);
+    MainWindow* w = new MainWindow();
+    w->show();
+    close();
 }
 
 void ConnectionDialog::onRosError(const RosException &exception) {
