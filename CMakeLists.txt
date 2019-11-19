@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 )
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
@@ -49,5 +49,10 @@ qt5_wrap_ui(UI_HEADERS ${UI})
 add_executable(rov_ui_ctrl ${SOURCE_FILES} ${UI_HEADERS})
 
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
-target_link_libraries(rov_ui_ctrl PRIVATE Qt5::Widgets ${catkin_LIBRARIES} ${SDL2_LIBRARIES})
+target_link_libraries(rov_ui_ctrl PRIVATE
+    Qt5::Widgets
+    Qt5::Network
+    ${catkin_LIBRARIES}
+    ${SDL2_LIBRARIES}
+)
 
