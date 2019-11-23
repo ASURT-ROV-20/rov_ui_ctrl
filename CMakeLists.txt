@@ -24,6 +24,14 @@ find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+find_package(PkgConfig)
+include_directories(${GST_INCLUDE_DIRS})
+
+pkg_check_modules(GST REQUIRED gstreamer-1.0>=1.4
+                               gstreamer-sdp-1.0>=1.4
+                               gstreamer-video-1.0>=1.4
+                               gstreamer-app-1.0>=1.4)
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ros_demo
@@ -47,6 +55,7 @@ file(GLOB UI "*/*.ui" "./*.ui")
 
 qt5_wrap_ui(UI_HEADERS ${UI})
 add_executable(rov_ui_ctrl ${SOURCE_FILES} ${UI_HEADERS})
+#target_compile_options (rov_ui_ctrl ${GST_CFLAGS})
 
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 target_link_libraries(rov_ui_ctrl PRIVATE
@@ -56,3 +65,4 @@ target_link_libraries(rov_ui_ctrl PRIVATE
     ${SDL2_LIBRARIES}
 )
 
+target_link_libraries(rov_ui_ctrl ${GST_LIBRARIES})
