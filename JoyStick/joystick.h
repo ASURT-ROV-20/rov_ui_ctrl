@@ -24,7 +24,7 @@ public:
 signals:
     void buttonPressed(int btnNo);
     void buttonUp(int btnNo);
-    void axisChanged(float x, float y, float z);
+    void axisChanged(float x, float y, float z, float r);
     void connected();
     void disconnected();
 

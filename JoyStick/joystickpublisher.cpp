@@ -14,11 +14,13 @@ void JoystickPublisher::timerEvent(QTimerEvent *) {
     msg.x = prevX;
     msg.y = prevY;
     msg.z = prevZ;
+    msg.w = prevR;
     m_publisher.publish(msg);
 }
 
-void JoystickPublisher::onAxisChanged(float x, float y, float z) {
+void JoystickPublisher::onAxisChanged(float x, float y, float z, float r) {
     prevX = x;
     prevY = y;
     prevZ = z;
+    prevR = r;
 }

@@ -15,7 +15,7 @@ public:
 signals:
 
 public slots:
-    void onAxisChanged(float x, float y, float z);
+    void onAxisChanged(float x, float y, float z, float r);
 
 protected:
     void timerEvent(QTimerEvent *) override;
@@ -23,7 +23,7 @@ protected:
 private:
     Joystick* m_joystick;
     ros::Publisher m_publisher;
-    float prevX, prevY, prevZ;
+    float prevX, prevY, prevZ, prevR;
 };
 
 #endif // JOYSTICKPUBLISHER_H
