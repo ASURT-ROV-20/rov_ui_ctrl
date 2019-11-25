@@ -11,6 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_timer, &QTimer::timeout, this, &MainWindow::handleTimer);
     m_timer->start(1000);
 
+    initJoystick();
+
+    initGstreamer();
+}
+
+void MainWindow::initJoystick() {
     m_joystick = Joystick::getInstance();
     connect(m_joystick, &Joystick::axisChanged, this, &MainWindow::onAxisChanged);
     connect(m_joystick, &Joystick::buttonUp, this, &MainWindow::onButtonPressed);
@@ -19,7 +25,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_joystick, &Joystick::disconnected, this, &MainWindow::onJoystickDisconnected);
     m_joystickPublisher = new JoystickPublisher(m_joystick, this);
 
-    initGstreamer();
+    joystickStatusLbl = new QLabel(this);
+    ui->statusbar->addPermanentWidget(joystickStatusLbl);
+
+    if (m_joystick->isConnected()) {
+        joystickStatusLbl->setText(QString("Joystick connected ") + m_joystick->getName());
+        joystickStatusLbl->setStyleSheet("QLabel {color: blue}");
+    } else {
+        joystickStatusLbl->setText("Joystick disconnected");
+        joystickStatusLbl->setStyleSheet("QLabel {color: red}");
+    }
 }
 
 void MainWindow::handleTimer() {
@@ -34,11 +49,13 @@ void MainWindow::onAxisChanged(float x, float y, float z, float r) {
 }
 
 void MainWindow::onJoystickConnected() {
-    qDebug() << "Joystick Connected";
+    joystickStatusLbl->setText(QString("Joystick connected ") + m_joystick->getName());
+    joystickStatusLbl->setStyleSheet("QLabel {color: blue}");
 }
 
 void MainWindow::onJoystickDisconnected() {
-    qDebug() << "Joystick Disconnected";
+    joystickStatusLbl->setText("Joystick disconnected");
+    joystickStatusLbl->setStyleSheet("QLabel {color: red}");
 }
 
 void MainWindow::onButtonUp(int btnNo) {
@@ -59,7 +76,7 @@ void MainWindow::initGstreamer() {
     gst_element_set_state (gst_pipline1, GST_STATE_PLAYING);
 
     gst_pipline2 = gst_parse_launch("udpsrc port=5001 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink2", nullptr);
-    gst_sink2 = gst_bin_get_by_name((GstBin*)gst_pipline1,"mySink2");
+    gst_sink2 = gst_bin_get_by_name((GstBin*)gst_pipline2,"mySink2");
 
     WId xwinid2 = ui->camera2Wdgt->winId();
     gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (gst_sink2), (guintptr)xwinid2);
@@ -74,8 +91,9 @@ void MainWindow::closeGstreamer() {
 MainWindow::~MainWindow()
 {
     closeGstreamer();
+    delete joystickStatusLbl;
     if (m_joystick != nullptr) {
-        m_joystick->close();
+        m_joystick->shutdown();
         delete m_joystick;
         m_joystick = nullptr;
     }

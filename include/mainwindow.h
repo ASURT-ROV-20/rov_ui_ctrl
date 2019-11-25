@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QLabel>
 #include <QDebug>
 #include "JoyStick/joystick.h"
 #include "JoyStick/joystickpublisher.h"
@@ -33,6 +34,8 @@ private:
 
     void initGstreamer();
     void closeGstreamer();
+    void initJoystick();
+    void closeJoystick();
 
     Ui::MainWindow *ui;
     unsigned int m_time;
@@ -45,6 +48,8 @@ private:
 
     Joystick* m_joystick;
     JoystickPublisher* m_joystickPublisher;
+
+    QLabel* joystickStatusLbl;
 };
 
 #endif // MAINWINDOW_H
