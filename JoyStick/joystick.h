@@ -2,6 +2,7 @@
 #define JOYSTICK_H
 
 #include <QObject>
+#include <SDL.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_joystick.h>
 #include <QDebug>
@@ -19,7 +20,9 @@ public:
     static Joystick* getInstance();
     virtual ~Joystick();
     bool isConnected();
-    void close();
+    void shutdown();
+    QString getName();
+    QString getGuid();
 
 signals:
     void buttonPressed(int btnNo);
@@ -33,11 +36,12 @@ private slots:
 
 private:
     Joystick();
+    void close();
     bool init();
+    bool openJoystick(int deviceIndex);
 
     SDL_Joystick* m_controller;
 
-    bool m_isConnected;
     bool m_isRunning;
     static Joystick* m_instance;
     QThread *m_thread;
