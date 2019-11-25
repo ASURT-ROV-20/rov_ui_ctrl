@@ -7,10 +7,7 @@
 #include <QDebug>
 #include "JoyStick/joystick.h"
 #include "JoyStick/joystickpublisher.h"
-
-#include <glib-object.h>
-#include <gst/gst.h>
-#include <gst/video/video.h>
+#include "include/gstreamer.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,8 +29,6 @@ private:
     Q_SLOT void onButtonPressed(int btnNo);
     Q_SLOT void onButtonUp(int btnNo);
 
-    void initGstreamer();
-    void closeGstreamer();
     void initJoystick();
     void closeJoystick();
 
@@ -41,15 +36,12 @@ private:
     unsigned int m_time;
     QTimer *m_timer;
 
-    GstElement* gst_pipline1;
-    GstElement* gst_sink1;
-    GstElement* gst_pipline2;
-    GstElement* gst_sink2;
-
     Joystick* m_joystick;
     JoystickPublisher* m_joystickPublisher;
 
     QLabel* joystickStatusLbl;
+
+    Gstreamer * gstreamer;
 };
 
 #endif // MAINWINDOW_H
