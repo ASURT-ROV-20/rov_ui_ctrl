@@ -25,12 +25,14 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 find_package(PkgConfig)
-include_directories(${GST_INCLUDE_DIRS})
 
-pkg_check_modules(GST REQUIRED gstreamer-1.0>=1.4
-                               gstreamer-sdp-1.0>=1.4
-                               gstreamer-video-1.0>=1.4
-                               gstreamer-app-1.0>=1.4)
+pkg_check_modules(GST REQUIRED gstreamer-1.0>=1.4)
+pkg_check_modules(GSTVIDEO REQUIRED gstreamer-video-1.0>=1.4)
+include_directories(${GST_INCLUDE_DIRS})
+include_directories(${GSTVIDEO_INCLUDE_DIRS})
+link_directories(GST_LIBRARY_DIRS)
+link_directories(GSTVIDEO_LIBRARY_DIRS)
+
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -55,7 +57,6 @@ file(GLOB UI "*/*.ui" "./*.ui")
 
 qt5_wrap_ui(UI_HEADERS ${UI})
 add_executable(rov_ui_ctrl ${SOURCE_FILES} ${UI_HEADERS})
-#target_compile_options (rov_ui_ctrl ${GST_CFLAGS})
 
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 target_link_libraries(rov_ui_ctrl PRIVATE
@@ -65,4 +66,4 @@ target_link_libraries(rov_ui_ctrl PRIVATE
     ${SDL2_LIBRARIES}
 )
 
-target_link_libraries(rov_ui_ctrl ${GST_LIBRARIES})
+target_link_libraries(rov_ui_ctrl ${GST_LIBRARIES} ${GSTVIDEO_LIBRARIES})
