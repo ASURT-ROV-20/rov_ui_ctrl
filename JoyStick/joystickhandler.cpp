@@ -11,6 +11,7 @@ JoystickHandler::JoystickHandler(Joystick* joystick, QObject *parent) :
 
 void JoystickHandler::initMap() {
     m_map.insert(Pair(0, &JoystickHandler::emitChangeCameraMode));
+    m_map.insert(Pair(1, &JoystickHandler::emitChangeMainCamera));
     m_map.insert(Pair(2, &JoystickHandler::emitRise));
     m_map.insert(Pair(3, &JoystickHandler::emitDown));
 
@@ -26,6 +27,12 @@ void JoystickHandler::onButtonAction(unsigned char btnNo, JoystickButtonAction a
 void JoystickHandler::emitChangeCameraMode(JoystickButtonAction action) {
     if (action == Down) {
         emit changeCameraMode();
+    }
+}
+
+void JoystickHandler::emitChangeMainCamera(JoystickButtonAction action) {
+    if (action == Down) {
+        emit changeMainCamera();
     }
 }
 

@@ -25,6 +25,7 @@ public:
 
 signals:
     void changeCameraMode();
+    void changeMainCamera();
     void axisChanged(const AxesValues &axesValues);
 
 public slots:
@@ -35,6 +36,7 @@ private:
     void initMap();
 
     void emitChangeCameraMode(JoystickButtonAction action);
+    void emitChangeMainCamera(JoystickButtonAction action);
     void emitRise(JoystickButtonAction action);
     void emitDown(JoystickButtonAction action);
 

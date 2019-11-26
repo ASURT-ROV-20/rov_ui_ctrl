@@ -31,6 +31,7 @@ private:
     Q_SLOT void onJoystickConnected();
     Q_SLOT void onJoystickDisconnected();
     Q_SLOT void onChangeCameraMode();
+    Q_SLOT void onChangeMainCamera();
 
     void initGstreamer();
     void closeGstreamer();

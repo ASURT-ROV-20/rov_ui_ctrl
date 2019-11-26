@@ -23,6 +23,7 @@ void MainWindow::initJoystick() {
     connect(m_joystick, &Joystick::connected, this, &MainWindow::onJoystickConnected);
     connect(m_joystick, &Joystick::disconnected, this, &MainWindow::onJoystickDisconnected);
     connect(m_joystickHandler, &JoystickHandler::changeCameraMode, this, &MainWindow::onChangeCameraMode);
+    connect(m_joystickHandler, &JoystickHandler::changeMainCamera, this, &MainWindow::onChangeMainCamera);
     m_joystickPublisher = new JoystickPublisher(m_joystickHandler, this);
 
     joystickStatusLbl = new QLabel(this);
@@ -50,6 +51,10 @@ void MainWindow::onAxisChanged(const AxesValues &values) {
 
 void MainWindow::onChangeCameraMode() {
     // TODO: Change Camera Display Mode
+}
+
+void MainWindow::onChangeMainCamera() {
+    // TODO: Change Main Camera
 }
 
 void MainWindow::onJoystickConnected() {
