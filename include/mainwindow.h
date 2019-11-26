@@ -26,8 +26,6 @@ public:
 signals:
     void cameraLayoutChanged();
 
-private slots:
-    void onChangeCameraLayout();
 private:
     Q_SLOT void handleTimer();
     Q_SLOT void onAxisChanged(const AxesValues &values);

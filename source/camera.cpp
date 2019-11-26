@@ -12,6 +12,7 @@ Camera::Camera(QWidget *parent, QWidget * camera_1, QWidget * camera_2, QWidget 
     camera_layouts.append(main_corner);
     camera_layouts.append(main_only);
     camera_layouts.append(main_side);
+    onCameraChange();
 }
 
 void Camera::toggleMain() {

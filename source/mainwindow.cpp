@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     gstreamer = new Gstreamer(ui);
     camera = new Camera(this, ui->camera1Wdgt, ui->camera2Wdgt, ui->camera3Wdgt);
-    onChangeCameraLayout();
 }
 
 void MainWindow::initJoystick() {
@@ -52,11 +51,11 @@ void MainWindow::onAxisChanged(const AxesValues &values) {
 }
 
 void MainWindow::onChangeCameraMode() {
-    // TODO: Change Camera Display Mode
+    camera->toggleMode();
 }
 
 void MainWindow::onChangeMainCamera() {
-    // TODO: Change Main Camera
+    camera->toggleMain();
 }
 
 void MainWindow::onJoystickConnected() {
@@ -67,24 +66,6 @@ void MainWindow::onJoystickConnected() {
 void MainWindow::onJoystickDisconnected() {
     joystickStatusLbl->setText("Joystick disconnected");
     joystickStatusLbl->setStyleSheet("QLabel {color: red}");
-}
-
-void MainWindow::onButtonUp(int btnNo) {
-    qDebug() << "Button Up: " << btnNo;
-}
-
-void MainWindow::onButtonPressed(int btnNo) {
-    qDebug() << "Button Pressed: " << btnNo;
-}
-
-
-void MainWindow::onChangeCameraLayout()
-{
-
-    camera->toggleMode();
-    camera->toggleMode();
-    camera->toggleMode();
-    camera->toggleMain();
 }
 
 
