@@ -30,10 +30,15 @@ void Camera::toggleMode() {
 }
 
 void Camera::onCameraChange() {
+    cameras[0]->show();
+    cameras[1]->show();
+    cameras[2]->show();
     QSize size = parent->size();
     switch (camera_layouts[0]) {
         case main_only:
             setCamAsMain(cameras[0]);
+            cameras[1]->hide();
+            cameras[2]->hide();
         break;
         case main_side:
             setCamAsSideLeft(cameras[0]);
