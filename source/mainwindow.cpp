@@ -12,7 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_timer->start(1000);
 
     initJoystick();
+
     gstreamer = new Gstreamer(ui);
+    camera = new Camera(this, ui->camera1Wdgt, ui->camera2Wdgt, ui->camera3Wdgt);
+    onChangeCameraLayout();
 }
 
 void MainWindow::initJoystick() {
@@ -64,6 +67,17 @@ void MainWindow::onButtonUp(int btnNo) {
 void MainWindow::onButtonPressed(int btnNo) {
     qDebug() << "Button Pressed: " << btnNo;
 }
+
+
+void MainWindow::onChangeCameraLayout()
+{
+
+    camera->toggleMode();
+    camera->toggleMode();
+    camera->toggleMode();
+    camera->toggleMain();
+}
+
 
 MainWindow::~MainWindow()
 {

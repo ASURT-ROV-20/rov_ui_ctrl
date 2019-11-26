@@ -8,6 +8,7 @@
 #include "JoyStick/joystick.h"
 #include "JoyStick/joystickpublisher.h"
 #include "include/gstreamer.h"
+#include "include/camera.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void cameraLayoutChanged();
+
+private slots:
+    void onChangeCameraLayout();
 private:
     Q_SLOT void handleTimer();
     Q_SLOT void onAxisChanged(float x, float y, float z, float r);
@@ -32,6 +38,8 @@ private:
     void initJoystick();
     void closeJoystick();
 
+    void toggleCamera();
+
     Ui::MainWindow *ui;
     unsigned int m_time;
     QTimer *m_timer;
@@ -42,6 +50,9 @@ private:
     QLabel* joystickStatusLbl;
 
     Gstreamer * gstreamer;
+
+    Camera * camera;
+
 };
 
 #endif // MAINWINDOW_H
