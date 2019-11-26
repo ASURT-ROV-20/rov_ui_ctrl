@@ -13,7 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initJoystick();
 
-    initGstreamer();
+    gstreamer = new Gstreamer(ui);
+    camera = new Camera(this, ui->camera1Wdgt, ui->camera2Wdgt, ui->camera3Wdgt);
 }
 
 void MainWindow::initJoystick() {
@@ -50,11 +51,11 @@ void MainWindow::onAxisChanged(const AxesValues &values) {
 }
 
 void MainWindow::onChangeCameraMode() {
-    // TODO: Change Camera Display Mode
+    camera->toggleMode();
 }
 
 void MainWindow::onChangeMainCamera() {
-    // TODO: Change Main Camera
+    camera->toggleMain();
 }
 
 void MainWindow::onJoystickConnected() {
@@ -67,31 +68,10 @@ void MainWindow::onJoystickDisconnected() {
     joystickStatusLbl->setStyleSheet("QLabel {color: red}");
 }
 
-void MainWindow::initGstreamer() {
-    gst_init(nullptr, nullptr);
-    gst_pipline1 = gst_parse_launch("udpsrc port=5000 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink", nullptr);
-    gst_sink1 = gst_bin_get_by_name((GstBin*)gst_pipline1,"mySink");
-
-    WId xwinid = ui->camera1Wdgt->winId();
-    gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (gst_sink1), (guintptr)xwinid);
-    gst_element_set_state (gst_pipline1, GST_STATE_PLAYING);
-
-    gst_pipline2 = gst_parse_launch("udpsrc port=5001 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink2", nullptr);
-    gst_sink2 = gst_bin_get_by_name((GstBin*)gst_pipline2,"mySink2");
-
-    WId xwinid2 = ui->camera2Wdgt->winId();
-    gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (gst_sink2), (guintptr)xwinid2);
-    gst_element_set_state (gst_pipline2, GST_STATE_PLAYING);
-}
-
-void MainWindow::closeGstreamer() {
-    gst_object_unref(gst_pipline1);
-    gst_object_unref(gst_pipline2);
-}
 
 MainWindow::~MainWindow()
 {
-    closeGstreamer();
+    delete gstreamer;
     delete joystickStatusLbl;
     if (m_joystick != nullptr) {
         m_joystick->shutdown();
