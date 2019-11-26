@@ -3,18 +3,10 @@
 
 Joystick* Joystick::m_instance = nullptr;
 
-float convertPercent(float v) {
-    float value = -(v)/powf(2, 15);
-    if (fabs(value) < .05)
-        return 0;
-    if (fabs(value) > .95)
-        return value > 0? 1 : -1;
-    return value;
-}
-
 Joystick::Joystick():
     m_controller(nullptr), m_isRunning(true), m_thread(new QThread(this)) {
-
+    qRegisterMetaType<JoystickAxis>();
+    qRegisterMetaType<JoystickButtonAction>();
     connect(m_thread, &QThread::started, this, &Joystick::run);
     moveToThread(m_thread);
     m_thread->start();
@@ -75,13 +67,32 @@ void Joystick::shutdown() {
 
 bool Joystick::isConnected() { return (m_controller != nullptr); }
 
+float Joystick::scaleAxisValue(JoystickAxis axis, float value) {
+    if (axis == AxisZ) {
+        value = (-value + JOYSTICK_SCALE)/2;
+        if (value < JOYSTICK_MIN_ZAXIS_VALUE)
+            return 0;
+        if (value > JOYSTICK_MAX_ZAXIS_VALUE)
+            return 1;
+        return value/JOYSTICK_SCALE;
+    } else {
+        if (abs(value) < JOYSTICK_MIN_AXIS_VALUE)
+            return 0;
+        if (value < JOYSTICK_MIN_AXIS_VALUE)
+            return -1;
+        if (value > JOYSTICK_MAX_AXIS_VALUE)
+            return 1;
+        return -value/JOYSTICK_SCALE;
+    }
+}
+
 void Joystick::run() {
     while (!init() && m_isRunning) {
         QThread::msleep(100);
     }
 
     SDL_Event e;
-    float prevX = 0, prevY = 0, prevZ = 0, prevR = 0;
+    float prevValues[] = {0, 0, 0, 0};
     while(m_isRunning)
     {
         while (SDL_PollEvent(&e)) {
@@ -93,20 +104,15 @@ void Joystick::run() {
             {
                 shutdown();
             } else if( e.type == SDL_JOYAXISMOTION ) {
-                if ((fabs(SDL_JoystickGetAxis(m_controller, 0) - prevX) > JOYSTICK_DEAD_ZONE) ||
-                        (fabs(SDL_JoystickGetAxis(m_controller, 1) - prevY) > JOYSTICK_DEAD_ZONE) ||
-                        (fabs(SDL_JoystickGetAxis(m_controller, 2) - prevZ) > JOYSTICK_DEAD_ZONE) ||
-                        (fabs(SDL_JoystickGetAxis(m_controller, 3) - prevR) > JOYSTICK_DEAD_ZONE)) {
-                    prevX = SDL_JoystickGetAxis(m_controller, 0);
-                    prevY = SDL_JoystickGetAxis(m_controller, 1);
-                    prevZ = SDL_JoystickGetAxis(m_controller, 2);
-                    prevR = SDL_JoystickGetAxis(m_controller, 3);
-                    emit axisChanged(convertPercent(prevX), convertPercent(prevY), (convertPercent(prevZ) + 1 )/ 2, convertPercent(prevR));
+                if (fabs(prevValues[e.jaxis.axis] - e.jaxis.value) > JOYSTICK_CHANGE_INTEVAL) {
+                    prevValues[e.jaxis.axis] = e.jaxis.value;
+                    float scaledValue = scaleAxisValue((JoystickAxis)(e.jaxis.axis), e.jaxis.value);
+                    emit axisChanged((JoystickAxis)(e.jaxis.axis), scaledValue);
                 }
             } else if ( e.type == SDL_JOYBUTTONUP ) {
-                emit buttonUp(e.jbutton.button);
+                emit buttonAction(e.jbutton.button, Up);
             } else if ( e.type == SDL_JOYBUTTONDOWN ) {
-                emit buttonPressed(e.jbutton.button);
+                emit buttonAction(e.jbutton.button, Down);
             } else if ( e.type == SDL_JOYDEVICEREMOVED && e.jdevice.which == SDL_JoystickInstanceID(m_controller) ) {
                 close();
                 openJoystick(0);

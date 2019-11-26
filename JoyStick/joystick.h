@@ -11,6 +11,18 @@
 #include <QMutex>
 
 #define JOYSTICK_DEAD_ZONE 1000
+#define JOYSTICK_CHANGE_INTEVAL 1000
+#define JOYSTICK_SCALE 32768
+#define JOYSTICK_MIN_AXIS_VALUE -32768 + JOYSTICK_DEAD_ZONE
+#define JOYSTICK_MAX_AXIS_VALUE 32768 - JOYSTICK_DEAD_ZONE
+#define JOYSTICK_MIN_ZAXIS_VALUE 0 + JOYSTICK_DEAD_ZONE
+#define JOYSTICK_MAX_ZAXIS_VALUE 32768 - JOYSTICK_DEAD_ZONE
+
+enum JoystickAxis {AxisX = 0, AxisY = 1, AxisZ = 2, AxisR = 3};
+Q_DECLARE_METATYPE(JoystickAxis);
+
+enum JoystickButtonAction {Down, Up};
+Q_DECLARE_METATYPE(JoystickButtonAction);
 
 class Joystick : public QObject
 {
@@ -25,9 +37,8 @@ public:
     QString getGuid();
 
 signals:
-    void buttonPressed(int btnNo);
-    void buttonUp(int btnNo);
-    void axisChanged(float x, float y, float z, float r);
+    void buttonAction(unsigned char btnNo, JoystickButtonAction action);
+    void axisChanged(JoystickAxis axis, float value);
     void connected();
     void disconnected();
 
@@ -39,6 +50,7 @@ private:
     void close();
     bool init();
     bool openJoystick(int deviceIndex);
+    float scaleAxisValue(JoystickAxis axis, float value);
 
     SDL_Joystick* m_controller;
 

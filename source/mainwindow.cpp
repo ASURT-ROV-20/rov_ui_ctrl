@@ -20,12 +20,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initJoystick() {
     m_joystick = Joystick::getInstance();
-    connect(m_joystick, &Joystick::axisChanged, this, &MainWindow::onAxisChanged);
-    connect(m_joystick, &Joystick::buttonUp, this, &MainWindow::onButtonPressed);
-    connect(m_joystick, &Joystick::buttonPressed, this, &MainWindow::onButtonUp);
+    m_joystickHandler = new JoystickHandler(m_joystick, this);
+    connect(m_joystickHandler, &JoystickHandler::axisChanged, this, &MainWindow::onAxisChanged);
     connect(m_joystick, &Joystick::connected, this, &MainWindow::onJoystickConnected);
     connect(m_joystick, &Joystick::disconnected, this, &MainWindow::onJoystickDisconnected);
-    m_joystickPublisher = new JoystickPublisher(m_joystick, this);
+    connect(m_joystickHandler, &JoystickHandler::changeCameraMode, this, &MainWindow::onChangeCameraMode);
+    connect(m_joystickHandler, &JoystickHandler::changeMainCamera, this, &MainWindow::onChangeMainCamera);
+    m_joystickPublisher = new JoystickPublisher(m_joystickHandler, this);
 
     joystickStatusLbl = new QLabel(this);
     ui->statusbar->addPermanentWidget(joystickStatusLbl);
@@ -46,8 +47,16 @@ void MainWindow::handleTimer() {
     ui->lblTimer->setText(minutes + ":" + seconds);
 }
 
-void MainWindow::onAxisChanged(float x, float y, float z, float r) {
-    qDebug() << "Axis Changed: " << x << "," << y << "," << z << ", " << r;
+void MainWindow::onAxisChanged(const AxesValues &values) {
+    qDebug() << "Axis Changed: " << values.x << "," << values.y << "," << values.z << ", " << values.r;
+}
+
+void MainWindow::onChangeCameraMode() {
+    // TODO: Change Camera Display Mode
+}
+
+void MainWindow::onChangeMainCamera() {
+    // TODO: Change Main Camera
 }
 
 void MainWindow::onJoystickConnected() {
