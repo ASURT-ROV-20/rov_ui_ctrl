@@ -19,6 +19,11 @@ void Gstreamer::initGstreamer() {
                  "udpsrc port=5001 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink2",
                  "mySink2");
     createWindow(gst_sink2, gst_pipeline2, ui->camera2Wdgt);
+
+    initPipeline(&gst_pipeline3, &gst_sink3,
+                 "udpsrc port=5002 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink3",
+                 "mySink3");
+    createWindow(gst_sink3, gst_pipeline3, ui->camera3Wdgt);
 }
 
 void Gstreamer::initPipeline(GstElement ** gst_pipeline, GstElement ** gst_sink, char const * pipeline_string, char const * name) {
@@ -28,7 +33,7 @@ void Gstreamer::initPipeline(GstElement ** gst_pipeline, GstElement ** gst_sink,
 
 WId Gstreamer::createWindow(GstElement * gst_sink, GstElement * gst_pipeline, QWidget * cameraWidget) {
     WId xwinid = cameraWidget->winId();
-    gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (gst_sink), (guintptr)xwinid);
+    gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (gst_sink), static_cast<guintptr>(xwinid));
     gst_element_set_state (gst_pipeline, GST_STATE_PLAYING);
     return xwinid;
 }
@@ -36,6 +41,7 @@ WId Gstreamer::createWindow(GstElement * gst_sink, GstElement * gst_pipeline, QW
 void Gstreamer::closeGstreamer() {
     gst_object_unref(gst_pipeline1);
     gst_object_unref(gst_pipeline2);
+    gst_object_unref(gst_pipeline3);
 }
 
 Gstreamer::~Gstreamer()
