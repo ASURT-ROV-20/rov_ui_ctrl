@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_timer->start(1000);
 
     initJoystick();
+    initPing();
 
     gstreamer = new Gstreamer(ui);
     camera = new Camera(this, ui->camera1Wdgt, ui->camera2Wdgt, ui->camera3Wdgt);
@@ -37,6 +38,45 @@ void MainWindow::initJoystick() {
         joystickStatusLbl->setText("Joystick disconnected");
         joystickStatusLbl->setStyleSheet("QLabel {color: red}");
     }
+}
+
+void MainWindow::closeJoystick() {
+    delete joystickStatusLbl;
+    if (m_joystick != nullptr) {
+        m_joystick->shutdown();
+        delete m_joystick;
+        m_joystick = nullptr;
+    }
+}
+
+void MainWindow::initPing() {
+    m_pingSubscriber = new PingTimeoutHelper();
+    connect(m_pingSubscriber, &PingTimeoutHelper::pingReceived, this, &MainWindow::onPingReceived);
+    connect(m_pingSubscriber, &PingTimeoutHelper::pingTimeout, this, &MainWindow::onPingTimeout);
+
+    pingStatusLbl = new QLabel();
+    ui->statusbar->addPermanentWidget(pingStatusLbl);
+}
+
+void MainWindow::closePing() {
+    delete pingStatusLbl;
+    delete m_pingSubscriber;
+}
+
+void MainWindow::onPingReceived() {
+    QString timeStr = m_pingSubscriber->getSubscriber()->getLastPingTime()->time().toString();
+    pingStatusLbl->setText("Ping received at: " + timeStr);
+    pingStatusLbl->setStyleSheet("QLabel {color: blue}");
+}
+
+void MainWindow::onPingTimeout() {
+    if (m_pingSubscriber->getSubscriber()->getLastPingTime() == nullptr) {
+        pingStatusLbl->setText("No Ping Received");
+    } else {
+        QString timeStr = m_pingSubscriber->getSubscriber()->getLastPingTime()->time().toString();
+        pingStatusLbl->setText("No Ping Received since: " + timeStr);
+    }
+    pingStatusLbl->setStyleSheet("QLabel {color: red}");
 }
 
 void MainWindow::handleTimer() {
@@ -72,11 +112,7 @@ void MainWindow::onJoystickDisconnected() {
 MainWindow::~MainWindow()
 {
     delete gstreamer;
-    delete joystickStatusLbl;
-    if (m_joystick != nullptr) {
-        m_joystick->shutdown();
-        delete m_joystick;
-        m_joystick = nullptr;
-    }
+    closeJoystick();
+    closePing();
     delete ui;
 }

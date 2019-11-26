@@ -10,6 +10,7 @@
 #include "JoyStick/joystickpublisher.h"
 #include "include/gstreamer.h"
 #include "include/camera.h"
+#include "ros/pingsubscriber.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,9 +34,13 @@ private:
     Q_SLOT void onJoystickDisconnected();
     Q_SLOT void onChangeCameraMode();
     Q_SLOT void onChangeMainCamera();
+    Q_SLOT void onPingReceived();
+    Q_SLOT void onPingTimeout();
 
     void initJoystick();
     void closeJoystick();
+    void initPing();
+    void closePing();
 
     void toggleCamera();
 
@@ -46,8 +51,10 @@ private:
     Joystick* m_joystick;
     JoystickHandler* m_joystickHandler;
     JoystickPublisher* m_joystickPublisher;
+    PingTimeoutHelper* m_pingSubscriber;
 
     QLabel* joystickStatusLbl;
+    QLabel* pingStatusLbl;
 
     Gstreamer * gstreamer;
 

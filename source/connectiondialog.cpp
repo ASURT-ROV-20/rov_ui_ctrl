@@ -78,9 +78,12 @@ void ConnectionDialog::on_btnCancel_clicked()
 }
 
 void ConnectionDialog::onRosConnected() {
+    disconnect();
+    rosNode->disconnect();
     MainWindow* w = new MainWindow();
     w->show();
     close();
+    destroy();
 }
 
 void ConnectionDialog::onRosError(const RosException &exception) {
