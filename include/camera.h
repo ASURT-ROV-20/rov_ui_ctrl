@@ -33,8 +33,8 @@ private:
 
     void onCameraChange();
 
-    float camera_corner_size_fraction = 0.25;
-    float camera_side_size_fraction = 2/3;
+    float const CAMERA_CORNER_SIZE_FRACTION = 0.25f;
+    float const CAMERA_SIDE_SIZE_FRACTION = 2.0f/3;
     };
 
 #endif // CAMERA_H
