@@ -47,8 +47,8 @@ void Camera::onCameraChange() {
         break;
         case main_corner:
             setCamAsMain(cameras[0]);
-            int corner_size_x = static_cast<int>(size.width() * camera_corner_size_fraction);
-            int corner_size_y = static_cast<int>(size.height() * camera_corner_size_fraction);
+            int corner_size_x = static_cast<int>(size.width() * CAMERA_CORNER_SIZE_FRACTION);
+            int corner_size_y = static_cast<int>(size.height() * CAMERA_CORNER_SIZE_FRACTION);
             setCamAsCornerUpRight(cameras[1], corner_size_x, corner_size_y);
             setCamAsCornerUpLeft(cameras[2], corner_size_x, corner_size_y);
         break;
@@ -60,25 +60,25 @@ void Camera::onCameraChange() {
 void Camera::setCamAsSideLeft(QWidget * camera) {
     QSize size = parent->size();
     camera->setGeometry(0, 0,
-                        static_cast<int>(size.width() * camera_side_size_fraction),
+                        static_cast<int>(size.width() * CAMERA_SIDE_SIZE_FRACTION),
                         size.height());
     camera->lower();
 }
 
 void Camera::setCamAsSideRightUp(QWidget * camera) {
     QSize size = parent->size();
-    camera->setGeometry(static_cast<int>(size.width() * camera_side_size_fraction),
+    camera->setGeometry(static_cast<int>(size.width() * CAMERA_SIDE_SIZE_FRACTION),
                         0,
-                        static_cast<int>(size.width() * (1 - camera_side_size_fraction)),
+                        static_cast<int>(size.width() * (1 - CAMERA_SIDE_SIZE_FRACTION)),
                         size.height()/2);
     camera->lower();
 }
 
 void Camera::setCamAsSideRightDown(QWidget * camera) {
     QSize size = parent->size();
-    camera->setGeometry(static_cast<int>(size.width() * camera_side_size_fraction),
+    camera->setGeometry(static_cast<int>(size.width() * CAMERA_SIDE_SIZE_FRACTION),
                         size.height()/2,
-                        static_cast<int>(size.width() * (1 - camera_side_size_fraction)),
+                        static_cast<int>(size.width() * (1 - CAMERA_SIDE_SIZE_FRACTION)),
                         size.height()/2);
     camera->lower();
 }
@@ -91,7 +91,7 @@ void Camera::setCamAsMain(QWidget * camera) {
 
 void Camera::setCamAsCornerUpRight(QWidget * camera, int size_x, int size_y) {
     QSize size = parent->size();
-    int corner_anchor_up_x = static_cast<int>(size.width() * ( 1 - camera_corner_size_fraction));
+    int corner_anchor_up_x = static_cast<int>(size.width() * ( 1 - CAMERA_CORNER_SIZE_FRACTION));
     camera->setGeometry(corner_anchor_up_x, 0, size_x, size_y);
 }
 
@@ -101,13 +101,13 @@ void Camera::setCamAsCornerUpLeft(QWidget * camera, int size_x, int size_y) {
 
 void Camera::setCamAsCornerDownRight(QWidget * camera, int size_x, int size_y) {
     QSize size = parent->size();
-    int corner_anchor_down_x = static_cast<int>(size.width() * ( 1 - camera_corner_size_fraction));
-    int corner_anchor_down_y = static_cast<int>(size.height() * ( 1 - camera_corner_size_fraction));
+    int corner_anchor_down_x = static_cast<int>(size.width() * ( 1 - CAMERA_CORNER_SIZE_FRACTION));
+    int corner_anchor_down_y = static_cast<int>(size.height() * ( 1 - CAMERA_CORNER_SIZE_FRACTION));
     camera->setGeometry(corner_anchor_down_x, corner_anchor_down_y, size_x, size_y);
 }
 
 void Camera::setCamAsCornerDownLeft(QWidget * camera, int size_x, int size_y) {
     QSize size = parent->size();
-    int corner_anchor_down_y = static_cast<int>(size.height() * ( 1 - camera_corner_size_fraction));
+    int corner_anchor_down_y = static_cast<int>(size.height() * ( 1 - CAMERA_CORNER_SIZE_FRACTION));
     camera->setGeometry(0, corner_anchor_down_y, size_x, size_y);
 }
