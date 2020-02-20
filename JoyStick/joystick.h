@@ -10,7 +10,7 @@
 #include <QTimer>
 #include <QMutex>
 
-#define JOYSTICK_DEAD_ZONE 2500
+#define JOYSTICK_DEAD_ZONE 500
 #define JOYSTICK_CHANGE_INTEVAL 1000
 #define JOYSTICK_SCALE 32768
 #define JOYSTICK_MIN_AXIS_VALUE -32768 + JOYSTICK_DEAD_ZONE
@@ -18,7 +18,7 @@
 #define JOYSTICK_MIN_ZAXIS_VALUE 0 + JOYSTICK_DEAD_ZONE
 #define JOYSTICK_MAX_ZAXIS_VALUE 32768 - JOYSTICK_DEAD_ZONE
 
-enum JoystickAxis {AxisX = 0, AxisY = 1, AxisZ = 2, AxisR = 3};
+enum JoystickAxis {AxisX = 0, AxisY = 1, AxisZ = 3, AxisR = 2};
 Q_DECLARE_METATYPE(JoystickAxis);
 
 enum JoystickButtonAction {Down, Up};

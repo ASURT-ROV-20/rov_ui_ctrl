@@ -53,6 +53,6 @@ void JoystickHandler::onAxisChanged(JoystickAxis axis, float value) {
     if (axis == AxisZ && !isRising && !isDown)
         return;
 
-    float zValue = (isRising? axesValues[2] : (isDown? -axesValues[2] : 0));
-    emit axisChanged(AxesValues(AxesValues(axesValues[0], axesValues[1], zValue, axesValues[3])));
+    float zValue = (isRising? axesValues[3] : (isDown? -axesValues[3] : 0));
+    emit axisChanged(AxesValues(AxesValues(axesValues[0], axesValues[1], zValue, axesValues[2])));
 }

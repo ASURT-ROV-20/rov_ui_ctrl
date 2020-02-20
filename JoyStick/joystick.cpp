@@ -76,12 +76,12 @@ float Joystick::scaleAxisValue(JoystickAxis axis, float value) {
             return 1;
         return value/JOYSTICK_SCALE;
     } else {
-        if (abs(value) < JOYSTICK_MIN_AXIS_VALUE)
+        if (abs(value) < JOYSTICK_DEAD_ZONE)
             return 0;
         if (value < JOYSTICK_MIN_AXIS_VALUE)
-            return -1;
-        if (value > JOYSTICK_MAX_AXIS_VALUE)
             return 1;
+        if (value > JOYSTICK_MAX_AXIS_VALUE)
+            return -1;
         return -value/JOYSTICK_SCALE;
     }
 }
