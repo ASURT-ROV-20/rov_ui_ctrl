@@ -11,7 +11,7 @@ JoystickPublisher::JoystickPublisher(JoystickHandler* joystick, QObject *parent)
 
 void JoystickPublisher::timerEvent(QTimerEvent *) {
     geometry_msgs::Quaternion msg;
-    msg.x = prevX;
+    msg.x = -prevX;
     msg.y = prevY;
     msg.z = prevZ;
     msg.w = prevR;

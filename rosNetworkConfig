@@ -1,0 +1,10 @@
+// ROS MASTER 
+export ROS_MASTER_URI = http://localhost:11011
+export ROS_HOSTNAME = 10.42.0.20
+export ROS_IP = 10.42.0.20
+
+hostname -I
+
+export ROS_IP = 10.42.0.01
+export ROS_HOSTNAME = 10.42.0.01
+export ROS_MASTER_URI = http://10.42.0.20:11011
