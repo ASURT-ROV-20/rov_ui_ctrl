@@ -1,9 +1,11 @@
 #ifndef JOYSTICKHANDLER_H
 #define JOYSTICKHANDLER_H
 
+#include <QDebug>
 #include <QObject>
 #include <map>
 #include "joystick.h"
+#include "axisconfig.h"
 
 struct AxesValues {
     float x, y, z, r;
@@ -22,6 +24,7 @@ class JoystickHandler : public QObject
 
 public:
     explicit JoystickHandler(Joystick* joystick, QObject *parent = nullptr);
+    ~JoystickHandler();
 
 signals:
     void changeCameraMode();
@@ -29,22 +32,22 @@ signals:
     void axisChanged(const AxesValues &axesValues);
 
 public slots:
-    void onAxisChanged(JoystickAxis axis, float value);
+    void onAxisChanged(quint8 axis, float value);
     void onButtonAction(unsigned char btnNo, JoystickButtonAction action);
 
 private:
-    void initMap();
+    void initConfigs();
 
+    void emitAxisChanged();
     void emitChangeCameraMode(JoystickButtonAction action);
     void emitChangeMainCamera(JoystickButtonAction action);
     void emitRise(JoystickButtonAction action);
     void emitDown(JoystickButtonAction action);
 
-    KeyMap m_map;
-    float axesValues[4];
+    KeyMap btn_map;
+    std::map<quint8, AxisConfigs*> axes_map;
+    AxisConfigs* axesConfigs[4];
     Joystick* m_joystick;
-    bool isRising;
-    bool isDown;
 };
 
 

@@ -5,7 +5,6 @@ Joystick* Joystick::m_instance = nullptr;
 
 Joystick::Joystick():
     m_controller(nullptr), m_isRunning(true), m_thread(new QThread(this)) {
-    qRegisterMetaType<JoystickAxis>();
     qRegisterMetaType<JoystickButtonAction>();
     connect(m_thread, &QThread::started, this, &Joystick::run);
     moveToThread(m_thread);
@@ -67,23 +66,8 @@ void Joystick::shutdown() {
 
 bool Joystick::isConnected() { return (m_controller != nullptr); }
 
-float Joystick::scaleAxisValue(JoystickAxis axis, float value) {
-    if (axis == AxisZ) {
-        value = (-value + JOYSTICK_SCALE)/2;
-        if (value < JOYSTICK_MIN_ZAXIS_VALUE)
-            return 0;
-        if (value > JOYSTICK_MAX_ZAXIS_VALUE)
-            return 1;
-        return value/JOYSTICK_SCALE;
-    } else {
-        if (abs(value) < JOYSTICK_MIN_AXIS_VALUE)
-            return 0;
-        if (value < JOYSTICK_MIN_AXIS_VALUE)
-            return -1;
-        if (value > JOYSTICK_MAX_AXIS_VALUE)
-            return 1;
-        return -value/JOYSTICK_SCALE;
-    }
+inline float Joystick::scaleAxisValue(float value) {
+    return value/JOYSTICK_SCALE;
 }
 
 void Joystick::run() {
@@ -104,14 +88,15 @@ void Joystick::run() {
             {
                 shutdown();
             } else if( e.type == SDL_JOYAXISMOTION ) {
-                if (fabs(prevValues[e.jaxis.axis] - e.jaxis.value) > JOYSTICK_CHANGE_INTEVAL) {
+                if (fabsf(prevValues[e.jaxis.axis] - e.jaxis.value) > JOYSTICK_CHANGE_INTEVAL) {
                     prevValues[e.jaxis.axis] = e.jaxis.value;
-                    float scaledValue = scaleAxisValue((JoystickAxis)(e.jaxis.axis), e.jaxis.value);
-                    emit axisChanged((JoystickAxis)(e.jaxis.axis), scaledValue);
+                    float scaledValue = scaleAxisValue(e.jaxis.value);
+                    emit axisChanged(e.jaxis.axis, scaledValue);
                 }
             } else if ( e.type == SDL_JOYBUTTONUP ) {
                 emit buttonAction(e.jbutton.button, Up);
             } else if ( e.type == SDL_JOYBUTTONDOWN ) {
+//                qDebug() << "Button: " << e.jbutton.button << "Down";
                 emit buttonAction(e.jbutton.button, Down);
             } else if ( e.type == SDL_JOYDEVICEREMOVED && e.jdevice.which == SDL_JoystickInstanceID(m_controller) ) {
                 close();
