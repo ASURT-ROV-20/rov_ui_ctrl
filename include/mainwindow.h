@@ -11,6 +11,7 @@
 #include "include/gstreamer.h"
 #include "include/camera.h"
 #include "ros/pingsubscriber.h"
+#include "ros/cameracontrollerpublisher.h"
 
 namespace Ui {
 class MainWindow;
@@ -52,6 +53,7 @@ private:
     JoystickHandler* m_joystickHandler;
     JoystickPublisher* m_joystickPublisher;
     PingTimeoutHelper* m_pingSubscriber;
+    CameraControllerPublisher* m_camPublisher;
 
     QLabel* joystickStatusLbl;
     QLabel* pingStatusLbl;

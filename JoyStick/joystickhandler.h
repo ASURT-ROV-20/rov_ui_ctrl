@@ -7,6 +7,8 @@
 #include "joystick.h"
 #include "axisconfig.h"
 
+enum CameraMovement { MoveCameraUp, MoveCameraDown };
+
 struct AxesValues {
     float x, y, z, r;
     AxesValues() {}
@@ -30,6 +32,7 @@ signals:
     void changeCameraMode();
     void changeMainCamera();
     void axisChanged(const AxesValues &axesValues);
+    void cameraMoved(QString camId, CameraMovement movement);
 
 public slots:
     void onAxisChanged(quint8 axis, float value);
@@ -43,6 +46,8 @@ private:
     void emitChangeMainCamera(JoystickButtonAction action);
     void emitRise(JoystickButtonAction action);
     void emitDown(JoystickButtonAction action);
+    void emitMoveCameraUp(JoystickButtonAction action);
+    void emitMoveCameraDown(JoystickButtonAction action);
 
     KeyMap btn_map;
     std::map<quint8, AxisConfigs*> axes_map;

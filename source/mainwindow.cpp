@@ -27,6 +27,7 @@ void MainWindow::initJoystick() {
     connect(m_joystickHandler, &JoystickHandler::changeCameraMode, this, &MainWindow::onChangeCameraMode);
     connect(m_joystickHandler, &JoystickHandler::changeMainCamera, this, &MainWindow::onChangeMainCamera);
     m_joystickPublisher = new JoystickPublisher(m_joystickHandler, this);
+    m_camPublisher = new CameraControllerPublisher(m_joystickHandler, this);
 
     joystickStatusLbl = new QLabel(this);
     ui->statusbar->addPermanentWidget(joystickStatusLbl);
@@ -114,5 +115,6 @@ MainWindow::~MainWindow()
     delete gstreamer;
     closeJoystick();
     closePing();
+    delete m_camPublisher;
     delete ui;
 }

@@ -14,6 +14,8 @@ void JoystickHandler::initConfigs() {
     btn_map.insert(Pair(1, &JoystickHandler::emitChangeMainCamera));
     btn_map.insert(Pair(4, &JoystickHandler::emitRise));
     btn_map.insert(Pair(2, &JoystickHandler::emitDown));
+    btn_map.insert(Pair(5, &JoystickHandler::emitMoveCameraUp));
+    btn_map.insert(Pair(3, &JoystickHandler::emitMoveCameraDown));
 
     axesConfigs[AxisX] = new AxisConfigs(AxisX, false, false);
     axesConfigs[AxisY] = new AxisConfigs(AxisY, true, false);
@@ -67,6 +69,18 @@ void JoystickHandler::emitDown(JoystickButtonAction action) {
     else
         axesConfigs[AxisZ]->setEnabled(false);
     emitAxisChanged();
+}
+
+void JoystickHandler::emitMoveCameraUp(JoystickButtonAction action) {
+    if (action == Down) {
+        emit cameraMoved("cam1", MoveCameraUp);
+    }
+}
+
+void JoystickHandler::emitMoveCameraDown(JoystickButtonAction action) {
+    if (action == Down) {
+        emit cameraMoved("cam1", MoveCameraDown);
+    }
 }
 
 void JoystickHandler::onAxisChanged(quint8 axis, float value) {
