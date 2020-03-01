@@ -1,5 +1,6 @@
 #include "include/gstreamer.h"
 #include <QtWidgets/QWidget>
+#include <QDebug>
 
 Gstreamer::Gstreamer(Ui::MainWindow * ui)
 {
@@ -11,17 +12,17 @@ Gstreamer::Gstreamer(Ui::MainWindow * ui)
 void Gstreamer::initGstreamer() {
     gst_init(nullptr, nullptr);
     initPipeline(&gst_pipeline1, &gst_sink1,
-                 "udpsrc port=5000 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink",
+                 "rtspsrc location=rtsp://admin:123456@10.42.0.13/media/video1 latency=0 drop-on-latency=true max-rtcp-rtp-time-diff=50 protocols=udp-mcast+udp ! rtph265depay ! avdec_h265 ! autovideoconvert ! xvimagesink  name=mySink force-aspect-ratio=false sync=false enable-last-sample=true",
                  "mySink");
     createWindow(gst_sink1, gst_pipeline1, ui->camera1Wdgt);
 
     initPipeline(&gst_pipeline2, &gst_sink2,
-                 "udpsrc port=5001 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink2",
+                 "rtspsrc location=rtsp://admin:123456@10.42.0.13/media/video1 latency=0 drop-on-latency=true max-rtcp-rtp-time-diff=50 protocols=udp-mcast+udp ! rtph265depay ! avdec_h265 ! autovideoconvert ! xvimagesink  name=mySink2 force-aspect-ratio=false sync=false enable-last-sample=true",
                  "mySink2");
     createWindow(gst_sink2, gst_pipeline2, ui->camera2Wdgt);
 
     initPipeline(&gst_pipeline3, &gst_sink3,
-                 "udpsrc port=5002 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! videoscale ! ximagesink  name=mySink3",
+                 "rtspsrc location=rtsp://admin:123456@10.42.0.13/media/video1 latency=0 drop-on-latency=true max-rtcp-rtp-time-diff=50 protocols=udp-mcast+udp ! rtph265depay ! avdec_h265 ! videoconvert ! xvimagesink  name=mySink3 force-aspect-ratio=false sync=false enable-last-sample=true",
                  "mySink3");
     createWindow(gst_sink3, gst_pipeline3, ui->camera3Wdgt);
 }
