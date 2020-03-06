@@ -23,4 +23,5 @@ void JoystickPublisher::onAxisChanged(const AxesValues &axesValues) {
     prevY = axesValues.y;
     prevZ = axesValues.z;
     prevR = axesValues.r;
+    timerEvent(nullptr);
 }

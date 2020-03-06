@@ -78,8 +78,7 @@ void RosNode::run() {
         emit started();
         while (ros::master::check() && ros::ok()) {
             for (int i = 0; i < 100 && ros::ok(); ++i) {
-                ros::spinOnce();
-                QThread::msleep(10);
+                ros::spin();
             }
         }
 
