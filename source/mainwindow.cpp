@@ -28,6 +28,7 @@ void MainWindow::initJoystick() {
     connect(m_joystickHandler, &JoystickHandler::changeMainCamera, this, &MainWindow::onChangeMainCamera);
     m_joystickPublisher = new JoystickPublisher(m_joystickHandler, this);
     m_camPublisher = new CameraControllerPublisher(m_joystickHandler, this);
+    m_controlStatusPublisher = new ControlStatusPublisher(m_joystickHandler, this);
 
     joystickStatusLbl = new QLabel(this);
     ui->statusbar->addPermanentWidget(joystickStatusLbl);
@@ -116,5 +117,6 @@ MainWindow::~MainWindow()
     closeJoystick();
     closePing();
     delete m_camPublisher;
+    delete m_controlStatusPublisher;
     delete ui;
 }

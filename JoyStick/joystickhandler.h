@@ -33,6 +33,7 @@ signals:
     void changeMainCamera();
     void axisChanged(const AxesValues &axesValues);
     void cameraMoved(QString camId, CameraMovement movement);
+    void axisControlStatusChanged(QString axis, bool enabled);
 
 public slots:
     void onAxisChanged(quint8 axis, float value);

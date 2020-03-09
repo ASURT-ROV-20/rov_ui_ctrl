@@ -48,10 +48,13 @@ void JoystickHandler::emitChangeMainCamera(JoystickButtonAction action) {
 }
 
 void JoystickHandler::emitRise(JoystickButtonAction action) {
-    if (action == Down)
+    if (action == Down) {
         axesConfigs[AxisZ]->setDirectionAndEnable(Positive);
-    else
+        emit axisControlStatusChanged("z", false);
+    } else {
         axesConfigs[AxisZ]->setEnabled(false);
+        emit axisControlStatusChanged("z", true);
+    }
     emitAxisChanged();
 }
 
@@ -64,10 +67,13 @@ void JoystickHandler::emitAxisChanged() {
 }
 
 void JoystickHandler::emitDown(JoystickButtonAction action) {
-    if (action == Down)
+    if (action == Down) {
         axesConfigs[AxisZ]->setDirectionAndEnable(Negative);
-    else
+        emit axisControlStatusChanged("z", false);
+    } else {
         axesConfigs[AxisZ]->setEnabled(false);
+        emit axisControlStatusChanged("z", true);
+    }
     emitAxisChanged();
 }
 
