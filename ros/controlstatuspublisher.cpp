@@ -9,9 +9,9 @@ ControlStatusPublisher::ControlStatusPublisher(JoystickHandler* joystick, QObjec
 }
 
 void ControlStatusPublisher::onControlStatusChanged(QString axis, bool enabled) {
-    QString jsonStr("{axis: \"");
+    QString jsonStr("{\"axis\": \"");
     jsonStr = jsonStr.append(axis)
-            .append("\", enabled: ")
+            .append("\", \"enabled\": ")
             .append(enabled? "true" : "false")
             .append("}");
     std_msgs::String msg;
