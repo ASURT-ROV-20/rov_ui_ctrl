@@ -49,11 +49,14 @@ private:
     void emitDown(JoystickButtonAction action);
     void emitMoveCameraUp(JoystickButtonAction action);
     void emitMoveCameraDown(JoystickButtonAction action);
+    void emitAxisZControlStatus(JoystickButtonAction action);
 
     KeyMap btn_map;
     std::map<quint8, AxisConfigs*> axes_map;
     AxisConfigs* axesConfigs[4];
     Joystick* m_joystick;
+
+    bool axisZControlStatus = true;
 };
 
 

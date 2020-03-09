@@ -16,6 +16,7 @@ void JoystickHandler::initConfigs() {
     btn_map.insert(Pair(2, &JoystickHandler::emitDown));
     btn_map.insert(Pair(5, &JoystickHandler::emitMoveCameraUp));
     btn_map.insert(Pair(3, &JoystickHandler::emitMoveCameraDown));
+    btn_map.insert(Pair(11, &JoystickHandler::emitAxisZControlStatus));
 
     axesConfigs[AxisX] = new AxisConfigs(AxisX, false, false);
     axesConfigs[AxisY] = new AxisConfigs(AxisY, true, false);
@@ -53,7 +54,7 @@ void JoystickHandler::emitRise(JoystickButtonAction action) {
         emit axisControlStatusChanged("z", false);
     } else {
         axesConfigs[AxisZ]->setEnabled(false);
-        emit axisControlStatusChanged("z", true);
+        emit axisControlStatusChanged("z", axisZControlStatus);
     }
     emitAxisChanged();
 }
@@ -72,7 +73,7 @@ void JoystickHandler::emitDown(JoystickButtonAction action) {
         emit axisControlStatusChanged("z", false);
     } else {
         axesConfigs[AxisZ]->setEnabled(false);
-        emit axisControlStatusChanged("z", true);
+        emit axisControlStatusChanged("z", axisZControlStatus);
     }
     emitAxisChanged();
 }
@@ -86,6 +87,13 @@ void JoystickHandler::emitMoveCameraUp(JoystickButtonAction action) {
 void JoystickHandler::emitMoveCameraDown(JoystickButtonAction action) {
     if (action == Down) {
         emit cameraMoved("cam1", MoveCameraDown);
+    }
+}
+
+void JoystickHandler::emitAxisZControlStatus(JoystickButtonAction action) {
+    if (action == Down) {
+        axisZControlStatus = !axisZControlStatus;
+        emit axisControlStatusChanged("z", axisZControlStatus);
     }
 }
 
